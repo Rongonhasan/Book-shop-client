@@ -1,9 +1,37 @@
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import logo from '../../../assets/logo.png'
+import { AuthContext } from "../../../providers/AuthProvider";
+import { FaShoppingCart } from "react-icons/fa";
+import useCart from "../../../hooks/useCart";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const {user, logOut} = useContext(AuthContext);
+    const [cart] = useCart();
+    const [isScrolled, setIsScrolled] = useState(false);
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      if (scrollTop > 0) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+  
+    useEffect(() => {
+      window.addEventListener('scroll', handleScroll);
+      return () => {
+        window.removeEventListener('scroll', handleScroll);
+      };
+    }, []);
+  const handleLogout = () => {
+    logOut()
+     .then(() => { })
+      .catch(error => console.log(error));
+  }
+  
+
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -11,15 +39,36 @@ const Navbar = () => {
 
   const menuItems = (
     <>
-      <li className="font-semibold"><Link to="/" className="hover:underline btn-outline py-2">Home</Link></li>
+      <li className="font-semibold"><Link to="/" className=" btn-sm hover:underline btn-outline ">Home</Link></li>
+      <li className="font-semibold"><Link to="books" className=" btn-sm hover:underline btn-outline ">Blog</Link></li>
+      <li className="font-semibold"><Link to="books" className=" btn-sm hover:underline btn-outline ">Books</Link></li>
+      <li> <Link to= "/dashboard/cart"> 
+      <button className="btn btn-sm hover:underline flex ">
+      <FaShoppingCart className="mr-1 "></FaShoppingCart>
+        <div className="badge badge-secondary ">+{cart.length}</div>
+      </button>
+        </Link></li>
+
+      {
+    user ? <>
+    
+    <button onClick={handleLogout} className="btn btn-sm hover:underline btn-outline py-2">LogOut</button>
+    </> 
+    :
+     <>
       <li className="font-semibold"><Link to="/login" className="hover:underline btn-outline py-2">Login</Link></li>
-     
-     
+     </>
+  }
     </>
   );
 
+  
+
+
   return (
-    <div className="navbar fixed z-20 bg-opacity-10 h-[60px] bg-white text-black w-full">
+    <div  className={`navbar z-20 h-10 fixed w-full transition-colors duration-300 ${
+      isScrolled ? 'bg-white text-black font-bold' : 'bg-transparent text-black'
+    }`}>
       <div className="navbar-start">
         <button
           tabIndex={0}
@@ -49,9 +98,7 @@ const Navbar = () => {
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1">{menuItems}</ul>
       </div>
-      <div className="navbar-end">
-        <a className="btn">Button</a>
-      </div>
+     
 
       {isOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-20">

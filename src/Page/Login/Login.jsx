@@ -1,33 +1,79 @@
-
+import { useContext } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { AuthContext } from "../../providers/AuthProvider";
+import Swal from 'sweetalert2'
+import SocialLogin from "../../Components/SocialLogin/SocialLogin";
 
 const Login = () => {
+  const {signIn} = useContext(AuthContext);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const from = location.state?.from?.pathname || "/";
+  const handleLogin = event => {
+    event.preventDefault();
+    const form = event.target;
+    const email = form.email.value;
+    const password = form.password.value;
+    // console.log(email, password);
+    signIn(email, password)
+    .then((userCredential) => {
+      // Signed in 
+      const user = userCredential.user;
+      console.log(user)
+      Swal.fire({
+        title: 'User Login Successful.',
+        showClass: {
+            popup: 'animate__animated animate__fadeInDown'
+        },
+        hideClass: {
+            popup: 'animate__animated animate__fadeOutUp'
+        }
+    });
+    navigate(from, { replace: true });
+    })
+  }
     return (
-        <div className="flex min-h-screen">
-      <div className="hidden lg:flex w-1/2 bg-cover bg-center" style={{ backgroundImage: 'url(https://img.freepik.com/premium-vector/customizable-flat-illustration-mobile-login_9206-2872.jpg?w=740)' }}>
-        {/* This div will display the image on larger screens */}
-      </div>
-      <div className="flex flex-col justify-center w-full lg:w-1/2 p-8 bg-white">
-        <h2 className="text-4xl font-bold mb-8">Login</h2>
-        <form>
-          <div className="mb-4">
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
-            <input type="email" id="email" className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
-          </div>
-          <div className="mb-4">
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
-            <input type="password" id="password" className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
-          </div>
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center">
-              <input id="remember-me" type="checkbox" className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" />
-              <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">Remember me</label>
-            </div>
-            <div className="text-sm">
-              <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">Forgot your password?</a>
-            </div>
-          </div>
-          <button type="submit" className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Sign in</button>
-        </form>
+      <div className="hero w-full">
+          
+      <div className="hero-content grid md:grid-cols-2 flex-col lg:flex-row">
+        <div className="text-center lg:text-left">
+          {/* <h1 className="text-3xl font-bold justify-center text-center">Login</h1> <br /> */}
+          <br />
+          <br />
+         <img className='rounded-full h-[550px]' src="https://img.freepik.com/free-photo/modern-monitor-elegant-table_23-2150706433.jpg?t=st=1720266471~exp=1720270071~hmac=e9fde1c56fb4acf425bdde86d44f785f520a74b95f1c49f5342d099a5f5d9457&w=740" alt="" />
+        </div>
+       {/* log in page */}
+    
+       <form  onSubmit={handleLogin}
+        className="card-body  rounded-2xl">
+              <div className="form-control">
+                  <label className="label">
+                      <span className="label-text">Email</span>
+                  </label>
+                  <input type="email"  name="email" placeholder="email" className="input input-bordered" />
+                  
+              </div>
+              <div className="form-control">
+                  <label className="label">
+                      <span className="label-text">Password</span>
+                  </label>
+                  <input type="password"   name="password" placeholder="password" className="input input-bordered" />
+                  
+                  <label className="label">
+                      <a href="#" className="label-text-alt link link-hover">Forgot password?</a>
+                  </label>
+              </div>
+              <div className="form-control mt-6">
+                  <input  className="btn btn-primary" type="submit" value="Login" />
+              </div>
+              {/* <div className="form-control mt-6">
+                  <input  className="btn bg-red-600" type="submit" value="Goggle" />
+              </div> */}
+              <SocialLogin></SocialLogin>
+              {/* <SocialLogin></SocialLogin> */}
+              <p><small>New Here?<Link to="/signup">Create an account </Link>  </small></p>
+          </form>
       </div>
     </div>
     );
