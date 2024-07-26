@@ -1,8 +1,17 @@
 
 
 const Subscription = () => {
+  const images = [
+    'https://via.placeholder.com/400x300?text=Image+1',
+    'https://via.placeholder.com/400x300?text=Image+2',
+    'https://via.placeholder.com/400x300?text=Image+3',
+    'https://via.placeholder.com/400x300?text=Image+4',
+    'https://via.placeholder.com/400x300?text=Image+5',
+    'https://via.placeholder.com/400x300?text=Image+6',
+  ];
   return (
-    <div className="bg-white py-12">
+    <>
+       <div className="bg-white py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 className="text-3xl font-extrabold text-gray-900 text-center">Subscribe to Our Newsletter</h2>
         <p className="mt-4 text-gray-700 text-center">Get the latest updates, discounts, and news directly to your inbox.</p>
@@ -40,6 +49,29 @@ const Subscription = () => {
         </div>
       </div>
     </div>
+
+    <section className="bg-gray-100 py-20">
+      <div className="container mx-auto px-6 text-center">
+        <h2 className="text-4xl font-bold text-gray-800 mb-6">Photo Gallery</h2>
+        <p className="text-lg text-gray-600 mb-8">
+          Explore our collection of photos from various events and moments at our bookshop.
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+          {images.map((image, index) => (
+            <div key={index} className="overflow-hidden rounded-lg shadow-lg">
+              <img
+                src={image}
+                alt={`Gallery ${index + 1}`}
+                className="w-full h-64 object-cover"
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+    
+    </>
+ 
   );
 }
 
